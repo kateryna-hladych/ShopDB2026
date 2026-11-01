@@ -7,6 +7,8 @@ public interface IProductService
 {
     IEnumerable<Product> GetAllProducts();
     void AddProduct(Product product);
-    void DeleteProduct(int productId); 
+    void UpdateProduct(int productId, string name, decimal purchasePrice, decimal sellingPrice);
+    void SetProductBlocked(int productId, bool isBlocked);
+    void DeleteProduct(int productId);
     IEnumerable<Category> GetAllCategories();
 }

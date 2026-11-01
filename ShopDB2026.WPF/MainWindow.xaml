@@ -1,0 +1,203 @@
+﻿                      <Window x:Class="ShopDB2026.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Магазин техніки" Height="640" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource AppWindow}">
+
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        
+        <DockPanel Grid.Row="0" Margin="0,0,0,12">
+            <Button DockPanel.Dock="Right" Content="Вийти"
+                    Command="{Binding LogoutCommand}"
+                    Style="{StaticResource OutlineButton}"
+                    MinWidth="90" Margin="12,0,0,0"/>
+            <TextBlock DockPanel.Dock="Right"
+                       Text="{Binding RoleDisplay, StringFormat='Роль: {0}'}"
+                       Foreground="{StaticResource MutedBrush}"/>
+            <TextBlock Text="Магазин техніки"
+                       FontSize="22" FontWeight="SemiBold"
+                       Foreground="{StaticResource TitleBrush}"/>
+        </DockPanel>
+
+        <TabControl Grid.Row="1">
+
+            
+            <TabItem Header="Категорії">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <ListView ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
+                              Grid.Row="0" Margin="0,0,0,10">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding CategoryId}" Width="60"/>
+                                <GridViewColumn Header="Назва категорії" DisplayMemberBinding="{Binding Name}" Width="450"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Назва:" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBox Text="{Binding CategoryNameInput, UpdateSourceTrigger=PropertyChanged}" Width="400"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Додати" Command="{Binding AddCategoryCommand}" MinWidth="100"/>
+                        <Button Content="Редагувати" Command="{Binding EditCategoryCommand}" MinWidth="110"/>
+                        <Button Content="Видалити" Command="{Binding DeleteCategoryCommand}" MinWidth="100"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+
+            <TabItem Header="Товари">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    
+                    <Grid Grid.Row="0" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="170"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Пошук:" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Grid.Column="2" Text="Сортувати:" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center" Margin="16,0,10,0"/>
+                        <ComboBox Grid.Column="3" Height="36" Margin="2"
+                                  VerticalContentAlignment="Center"
+                                  ItemsSource="{Binding SortOptions}"
+                                  SelectedItem="{Binding SelectedSortOption}"/>
+
+                        <CheckBox Grid.Column="4" Content="За спаданням" Margin="12,0,0,0"
+                                  VerticalAlignment="Center"
+                                  IsChecked="{Binding SortDescending}"/>
+                    </Grid>
+
+                    
+                    <ListView ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
+                              Grid.Row="1" Margin="0,0,0,10">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ProductId}" Width="45"/>
+                                <GridViewColumn Header="Назва товару" DisplayMemberBinding="{Binding Name}" Width="250"/>
+                                <GridViewColumn Header="Категорія" DisplayMemberBinding="{Binding Category.Name}" Width="120"/>
+                                <GridViewColumn Header="Закупівельна" DisplayMemberBinding="{Binding PurchasePrice}" Width="105"/>
+                                <GridViewColumn Header="Ціна продажу" DisplayMemberBinding="{Binding SellingPrice}" Width="110"/>
+                                <GridViewColumn Header="Кількість" DisplayMemberBinding="{Binding StockQuantity}" Width="85"/>
+                                <GridViewColumn Header="Заблок." Width="70">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsBlocked, Mode=OneWay}"
+                                                      IsEnabled="False" HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    
+                    <Grid Grid.Row="2" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Назва товару:"
+                                   Style="{StaticResource FieldLabel}" Margin="0,0,10,0"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+                                 Text="{Binding ProductNameInput, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Категорія:"
+                                   Style="{StaticResource FieldLabel}" Margin="0,0,10,0"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" Height="36" Margin="2"
+                                  VerticalContentAlignment="Center"
+                                  ItemsSource="{Binding Categories}"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="CategoryId"
+                                  SelectedValue="{Binding ProductCategoryIdInput}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="Кількість:"
+                                   Style="{StaticResource FieldLabel}" Margin="16,0,10,0"/>
+                        <TextBox Grid.Row="1" Grid.Column="3"
+                                 Text="{Binding ProductStockInput, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Закупівельна ціна:"
+                                   Style="{StaticResource FieldLabel}" Margin="0,0,10,0"/>
+                        <TextBox Grid.Row="2" Grid.Column="1"
+                                 Text="{Binding ProductPurchasePriceInput, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="Ціна продажу:"
+                                   Style="{StaticResource FieldLabel}" Margin="16,0,10,0"/>
+                        <TextBox Grid.Row="2" Grid.Column="3"
+                                 Text="{Binding ProductPriceInput, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+
+                        <CheckBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                                  Content="Товар заблоковано (для нового товару)" Margin="2,8,0,0"
+                                  IsChecked="{Binding ProductIsBlockedInput}"/>
+                    </Grid>
+
+                    
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Додати товар" Command="{Binding AddProductCommand}" MinWidth="120"/>
+                        <Button Content="Змінити" Command="{Binding EditProductCommand}" MinWidth="100"/>
+                        <Button Content="Блокувати / розблокувати" Command="{Binding ToggleBlockProductCommand}" MinWidth="190"/>
+                        <Button Content="Очистити форму" Command="{Binding ClearProductFormCommand}"
+                                Style="{StaticResource OutlineButton}" MinWidth="130"/>
+                        <Button Content="Видалити товар" Command="{Binding DeleteProductCommand}" MinWidth="130"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+           
+            <TabItem Header="Історія">
+                <Grid Margin="12">
+                    <ListView ItemsSource="{Binding Histories}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="50"/>
+                                <GridViewColumn Header="ID товару" DisplayMemberBinding="{Binding ProductId}" Width="80"/>
+                                <GridViewColumn Header="Кількість" DisplayMemberBinding="{Binding AddedQuantity}" Width="90"/>
+                                <GridViewColumn Header="Коментар" DisplayMemberBinding="{Binding Comment}" Width="250"/>
+                                <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding CreatedAt}" Width="160"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>

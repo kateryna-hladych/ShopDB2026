@@ -9,6 +9,7 @@ namespace shopBL_Tests
         private int _nextId = 1;
 
         public int AddCalls { get; private set; }
+        public int UpdateCalls { get; private set; }
         public int DeleteCalls { get; private set; }
 
         public IReadOnlyList<Product> Items => _items;
@@ -26,7 +27,7 @@ namespace shopBL_Tests
             _items.Add(entity);
         }
 
-        public void Update(Product entity) { }
+        public void Update(Product entity) => UpdateCalls++;
 
         public void Delete(int id)
         {

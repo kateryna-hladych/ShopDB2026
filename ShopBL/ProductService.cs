@@ -33,18 +33,40 @@ public class ProductService : IProductService
         
         product.Name = (product.Name ?? string.Empty).Trim();
 
-        if (product.Name.Length == 0)
-            throw new BusinessRuleException("Назва товару не може бути порожньою!");
-        if (product.PurchasePrice < 0)
-            throw new BusinessRuleException("Закупівельна ціна не може бути від'ємною!");
-        if (product.SellingPrice <= 0)
-            throw new BusinessRuleException("Ціна продажу має бути більшою за 0!");
-        if (product.StockQuantity < 0)
-            throw new BusinessRuleException("Кількість не може бути від'ємною!");
+        ValidateFields(product.Name, product.PurchasePrice, product.SellingPrice, product.StockQuantity);
+
         if (_categories.GetById(product.CategoryId) == null)
             throw new BusinessRuleException("Категорію не знайдено!");
 
         _products.Add(product);
+    }
+
+    public void UpdateProduct(int productId, string name, decimal purchasePrice, decimal sellingPrice)
+    {
+        var product = _products.GetById(productId);
+        if (product == null)
+            throw new BusinessRuleException("Товар не знайдено!");
+
+        name = (name ?? string.Empty).Trim();
+
+        
+        ValidateFields(name, purchasePrice, sellingPrice, product.StockQuantity);
+
+        product.Name = name;
+        product.PurchasePrice = purchasePrice;
+        product.SellingPrice = sellingPrice;
+
+        _products.Update(product);
+    }
+
+    public void SetProductBlocked(int productId, bool isBlocked)
+    {
+        var product = _products.GetById(productId);
+        if (product == null)
+            throw new BusinessRuleException("Товар не знайдено!");
+
+        product.IsBlocked = isBlocked;
+        _products.Update(product);
     }
 
     public void DeleteProduct(int productId)
@@ -62,5 +84,17 @@ public class ProductService : IProductService
         }
 
         _products.Delete(productId);
+    }
+
+    private static void ValidateFields(string name, decimal purchasePrice, decimal sellingPrice, int stock)
+    {
+        if (name.Length == 0)
+            throw new BusinessRuleException("Назва товару не може бути порожньою!");
+        if (purchasePrice <= 0)
+            throw new BusinessRuleException("Закупівельна ціна має бути більшою за 0!");
+        if (sellingPrice <= 0)
+            throw new BusinessRuleException("Ціна продажу має бути більшою за 0!");
+        if (stock < 0)
+            throw new BusinessRuleException("Кількість не може бути від'ємною!");
     }
 }
